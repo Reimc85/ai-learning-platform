@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 from flask import Flask, send_from_directory
 from flask_cors import CORS
-from ai_learning_platform.src.models.user import db
+from src.models.user import db
 from src.models.learner import Learner, LearningSession
 from src.models.content import Content, LearningPath, Exercise
 from src.routes.user import user_bp

@@ -18,7 +18,7 @@ import {
   BarChart3
 } from 'lucide-react'
 
-const API_BASE_URL = 'http://localhost:5001/api'
+import { API_BASE_URL } from '../config/api.js'
 
 function Dashboard({ user, learner, onLogout }) {
   const [learningStats, setLearningStats] = useState({
@@ -30,6 +30,8 @@ function Dashboard({ user, learner, onLogout }) {
   const [recentSessions, setRecentSessions] = useState([])
   const [knowledgeGaps, setKnowledgeGaps] = useState([])
   const [loading, setLoading] = useState(true)
+  const [generatingContent, setGeneratingContent] = useState(false)
+  const [generatedContent, setGeneratedContent] = useState(null)
 
   useEffect(() => {
     fetchDashboardData()
@@ -87,6 +89,50 @@ function Dashboard({ user, learner, onLogout }) {
       }
     } catch (error) {
       console.error('Error starting learning session:', error)
+    }
+  }
+
+  const generatePracticeContent = async () => {
+    setGeneratingContent(true)
+    try {
+      // Get a concept based on the learner's niche
+      const concepts = {
+        tech_career: ['Python Functions', 'Data Structures', 'API Design', 'Testing Strategies'],
+        creator_business: ['Content Marketing', 'Social Media Strategy', 'Brand Building', 'Audience Engagement']
+      }
+      
+      const nicheConceptsArray = concepts[learner.target_niche] || concepts.tech_career
+      const randomConcept = nicheConceptsArray[Math.floor(Math.random() * nicheConceptsArray.length)]
+
+      const response = await fetch(`${API_BASE_URL}/learners/${learner.id}/generate-content`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          concept: randomConcept,
+          content_type: 'lesson'
+        })
+      })
+
+      if (response.ok) {
+        const content = await response.json()
+        setGeneratedContent(content)
+        
+        // Show success message
+        alert(`✅ Generated personalized content about "${content.concept}"!\n\nCheck the console (F12) to see the full AI-generated lesson tailored to your ${learner.preferred_learning_style} learning style and ${learner.experience_level} experience level.`)
+        
+        // Log the content to console for viewing
+        console.log('🎉 AI-Generated Content:', content)
+        console.log('📚 Lesson Content:', content.generated_content)
+      } else {
+        throw new Error('Failed to generate content')
+      }
+    } catch (error) {
+      console.error('Error generating content:', error)
+      alert('❌ Error generating content. Please try again.')
+    } finally {
+      setGeneratingContent(false)
     }
   }
 
@@ -294,10 +340,26 @@ function Dashboard({ user, learner, onLogout }) {
                   <Badge variant="outline" className="mr-2 mb-2">Testing Strategies</Badge>
                 </div>
               )}
-              <Button variant="outline" size="sm" className="mt-4 w-full">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="mt-4 w-full" 
+                onClick={generatePracticeContent}
+                disabled={generatingContent}
+              >
                 <BookOpen className="mr-2 h-4 w-4" />
-                Generate Practice Content
+                {generatingContent ? 'Generating...' : 'Generate Practice Content'}
               </Button>
+              {generatedContent && (
+                <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <p className="text-sm font-medium text-green-800">
+                    ✅ Generated content about "{generatedContent.concept}"
+                  </p>
+                  <p className="text-xs text-green-600 mt-1">
+                    Check the browser console (F12) to view the full lesson!
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
 

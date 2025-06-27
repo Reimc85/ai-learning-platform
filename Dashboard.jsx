@@ -99,7 +99,7 @@ function Dashboard({ user, learner, onLogout }) {
   try {
     console.log('📡 Making API call...');
     
-    const response = await fetch('/api/learners/2/generate-content', {
+    const response = await fetch(`${API_BASE_URL}/learners/${learner.id}/generate-content`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

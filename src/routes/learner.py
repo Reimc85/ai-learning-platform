@@ -5,6 +5,7 @@ from src.services.ai_service import AIContentGenerator
 import json
 from datetime import datetime
 import traceback # Add this import at the top of the file if not already there
+import sys
 
 learner_bp = Blueprint('learner', __name__)
 ai_generator = AIContentGenerator()

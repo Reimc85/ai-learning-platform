@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, request, jsonify
 from src.models.learner import Learner, LearningSession, db
 from src.models.user import User
 from src.services.ai_service import AIContentGenerator

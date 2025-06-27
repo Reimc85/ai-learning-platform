@@ -148,7 +148,7 @@ def start_learning_session(learner_id):
         
         return jsonify(session.to_dict()), 201
         
-   import traceback # Add this import at the top of the file if not already there
+import traceback # Add this import at the top of the file if not already there
 
 # ... (rest of the file) ...
 

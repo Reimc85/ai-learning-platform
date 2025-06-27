@@ -148,9 +148,36 @@ def start_learning_session(learner_id):
         
         return jsonify(session.to_dict()), 201
         
+   import traceback # Add this import at the top of the file if not already there
+
+# ... (rest of the file) ...
+
+@learner_bp.route('/learners/<int:learner_id>/sessions', methods=['POST'])
+def start_learning_session(learner_id):
+    """Start a new learning session"""
+    try:
+        learner = Learner.query.get_or_404(learner_id)
+        
+        session = LearningSession(
+            learner_id=learner_id,
+            session_start=datetime.utcnow(),
+            content_accessed=json.dumps([]),
+            exercises_completed=json.dumps([]),
+            performance_scores=json.dumps({})
+        )
+        
+        db.session.add(session)
+        db.session.commit()
+        
+        return jsonify(session.to_dict()), 201
+        
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': str(e)}), 500
+        # Print the full traceback to Railway logs
+        print(f"ERROR in start_learning_session: {e}", file=sys.stderr)
+        traceback.print_exc(file=sys.stderr) # This prints the full stack trace
+        return jsonify({'error': 'Internal Server Error: ' + str(e)}), 500 # Return a more generic error
+
 
 @learner_bp.route('/learners/<int:learner_id>/sessions/<int:session_id>', methods=['PUT'])
 def update_learning_session(learner_id, session_id):

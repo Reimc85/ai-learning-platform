@@ -130,24 +130,7 @@ def get_knowledge_gaps(learner_id):
         'threshold': threshold
     })
 
-@learner_bp.route('/learners/<int:learner_id>/sessions', methods=['POST'])
-def start_learning_session(learner_id):
-    """Start a new learning session"""
-    try:
-        learner = Learner.query.get_or_404(learner_id)
-        
-        session = LearningSession(
-            learner_id=learner_id,
-            session_start=datetime.utcnow(),
-            content_accessed=json.dumps([]),
-            exercises_completed=json.dumps([]),
-            performance_scores=json.dumps({})
-        )
-        
-        db.session.add(session)
-        db.session.commit()
-        
-        return jsonify(session.to_dict()), 201
+
         
 
 

@@ -93,48 +93,41 @@ function Dashboard({ user, learner, onLogout }) {
   }
 
   const generatePracticeContent = async () => {
-    setGeneratingContent(true)
-    try {
-      // Get a concept based on the learner's niche
-      const concepts = {
-        tech_career: ['Python Functions', 'Data Structures', 'API Design', 'Testing Strategies'],
-        creator_business: ['Content Marketing', 'Social Media Strategy', 'Brand Building', 'Audience Engagement']
-      }
-      
-      const nicheConceptsArray = concepts[learner.target_niche] || concepts.tech_career
-      const randomConcept = nicheConceptsArray[Math.floor(Math.random() * nicheConceptsArray.length)]
-
-      const response = await fetch(`${API_BASE_URL}/learners/${learner.id}/generate-content`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          concept: randomConcept,
-          content_type: 'lesson'
-        })
+  console.log('🚀 Generate button clicked - starting...');
+  setGeneratingContent(true);
+  
+  try {
+    console.log('📡 Making API call...');
+    
+    const response = await fetch('/api/learners/2/generate-content', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        concept: 'Content Marketing',
+        content_type: 'lesson'
       })
+    });
 
-      if (response.ok) {
-        const content = await response.json()
-        setGeneratedContent(content)
-        
-        // Show success message
-        alert(`✅ Generated personalized content about "${content.concept}"!\n\nCheck the console (F12) to see the full AI-generated lesson tailored to your ${learner.preferred_learning_style} learning style and ${learner.experience_level} experience level.`)
-        
-        // Log the content to console for viewing
-        console.log('🎉 AI-Generated Content:', content)
-        console.log('📚 Lesson Content:', content.generated_content)
-      } else {
-        throw new Error('Failed to generate content')
-      }
-    } catch (error) {
-      console.error('Error generating content:', error)
-      alert('❌ Error generating content. Please try again.')
-    } finally {
-      setGeneratingContent(false)
+    console.log('📥 Response received:', response.status);
+
+    if (response.ok) {
+      const content = await response.json();
+      console.log('✅ Content generated:', content);
+      setGeneratedContent(content);
+      
+      alert(`✅ Generated personalized content about "${content.concept}"!\n\nCheck the console (F12) to see the full AI-generated lesson!`);
+    } else {
+      throw new Error(`HTTP ${response.status}`);
     }
+  } catch (error) {
+    console.error('❌ Error generating content:', error);
+    alert('❌ Error generating content: ' + error.message);
+  } finally {
+    setGeneratingContent(false);
   }
+}
 
   const getNicheInfo = () => {
     const niches = {

@@ -4,6 +4,7 @@ from src.models.user import User
 from src.services.ai_service import AIContentGenerator
 import json
 from datetime import datetime
+import traceback # Add this import at the top of the file if not already there
 
 learner_bp = Blueprint('learner', __name__)
 ai_generator = AIContentGenerator()
@@ -148,7 +149,7 @@ def start_learning_session(learner_id):
         
         return jsonify(session.to_dict()), 201
         
-import traceback # Add this import at the top of the file if not already there
+
 
 # ... (rest of the file) ...
 

@@ -15,7 +15,9 @@ from src.routes.content import content_bp
 from src.routes.analytics import analytics_bp
 
 def create_app():
-    app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'frontend', 'dist'))
+    app = Flask(__name__, 
+        static_folder=os.path.join(os.path.dirname(__file__), 'frontend', 'dist'),
+        static_url_path='')
     
     # Configuration
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
@@ -43,7 +45,7 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
     
-        # Create all database tables
+    # Create all database tables
     with app.app_context():
         try:
             # !!! DANGER: This will drop all existing tables and data !!!
@@ -62,7 +64,6 @@ def create_app():
             # For now, we'll just log and continue, but this is a strong indicator of a problem
             # raise e # Uncomment this if you want deployment to fail on DB error
 
-    
     @app.route('/api/health', methods=['GET'])
     def health_check():
         """Health check endpoint"""
@@ -120,6 +121,11 @@ def create_app():
                 }
             ]
         }
+    
+    # NEW ROUTE: Handle assets specifically
+    @app.route('/assets/<path:filename>')
+    def serve_assets(filename):
+        return send_from_directory(os.path.join(app.static_folder, 'assets'), filename)
     
     # Serve React frontend
     @app.route('/', defaults={'path': ''})

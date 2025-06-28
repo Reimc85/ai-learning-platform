@@ -1,3 +1,5 @@
+// Updated after file reorganization - trigger rebuild
+
 import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button.jsx'

@@ -15,9 +15,8 @@ from src.routes.content import content_bp
 from src.routes.analytics import analytics_bp
 
 def create_app():
-    app = Flask(__name__, 
-        static_folder=os.path.join(os.path.dirname(__file__), 'frontend', 'dist'),
-        static_url_path='')
+   app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'frontend', 'dist'), static_url_path='')
+
     
     # Configuration
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')

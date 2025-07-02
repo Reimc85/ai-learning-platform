@@ -9,8 +9,8 @@ import { Brain, BookOpen, Target, Users, Zap, ChevronRight, Star, TrendingUp } f
 import './App.css'
 
 // Import components
-import LearnerOnboarding from './components/LearnerOnboarding'
-import Dashboard from './components/Dashboard'
+import Dashboard from './components/Dashboard';
+import LearnerOnboarding from './components/LearnerOnboarding';
 import LearningSession from './components/LearningSession'
 
 function App() {

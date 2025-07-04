@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import './App.css';
 
-// Onboarding Component
+// Onboarding Components
 function OnboardingFlow() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({

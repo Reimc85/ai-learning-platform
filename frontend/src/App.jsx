@@ -1,7 +1,98 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import './App.css';
 
-function App() {
+// Onboarding Component
+function OnboardingFlow() {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    username: '',
+    learningGoals: '',
+    experience: ''
+  });
+  const navigate = useNavigate();
+
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleNext = () => {
+    if (step < 3) {
+      setStep(step + 1);
+    } else {
+      // Complete onboarding and go to dashboard
+      navigate('/dashboard');
+    }
+  };
+
+  const handleBack = () => {
+    if (step > 1) {
+      setStep(step - 1);
+    }
+  };
+
+  return (
+    <div style={{ padding: '40px', maxWidth: '600px', margin: '0 auto' }}>
+      <h1>Welcome to AI Learning Platform</h1>
+      <p>Step {step} of 3</p>
+      
+      {step === 1 && (
+        <div>
+          <h2>What's your name?</h2>
+          <input
+            type="text"
+            placeholder="Enter your username"
+            value={formData.username}
+            onChange={(e) => handleInputChange('username', e.target.value)}
+            style={{ width: '100%', padding: '10px', marginBottom: '20px' }}
+          />
+        </div>
+      )}
+      
+      {step === 2 && (
+        <div>
+          <h2>What are your learning goals?</h2>
+          <textarea
+            placeholder="Tell us what you want to learn..."
+            value={formData.learningGoals}
+            onChange={(e) => handleInputChange('learningGoals', e.target.value)}
+            style={{ width: '100%', padding: '10px', marginBottom: '20px', height: '100px' }}
+          />
+        </div>
+      )}
+      
+      {step === 3 && (
+        <div>
+          <h2>What's your experience level?</h2>
+          <select
+            value={formData.experience}
+            onChange={(e) => handleInputChange('experience', e.target.value)}
+            style={{ width: '100%', padding: '10px', marginBottom: '20px' }}
+          >
+            <option value="">Select your level</option>
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+        </div>
+      )}
+      
+      <div>
+        {step > 1 && (
+          <button onClick={handleBack} style={{ marginRight: '10px' }}>
+            Back
+          </button>
+        )}
+        <button onClick={handleNext}>
+          {step === 3 ? 'Complete Setup' : 'Next'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Dashboard Component (with your test buttons)
+function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState('');
 
@@ -70,8 +161,8 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>AI Learning Platform</h1>
-        <p>React is now working! 🚀</p>
+        <h1>AI Learning Platform - Dashboard</h1>
+        <p>Welcome! Your onboarding is complete. 🚀</p>
       </header>
       
       <div>
@@ -103,6 +194,42 @@ function App() {
         </div>
       )}
     </div>
+  );
+}
+
+// Home Component (Landing Page)
+function Home() {
+  const navigate = useNavigate();
+
+  return (
+    <div className="App">
+      <header className="App-header">
+        <h1>AI Learning Platform</h1>
+        <p>Personalized learning powered by AI</p>
+      </header>
+      
+      <div>
+        <button onClick={() => navigate('/onboarding')}>
+          Start Learning Now
+        </button>
+        <button onClick={() => navigate('/onboarding')}>
+          Get Started
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Main App Component with Router
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/onboarding" element={<OnboardingFlow />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </Router>
   );
 }
 

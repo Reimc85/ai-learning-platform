@@ -1,1 +1,1 @@
-web: npx http-server build -p 8080 --proxy http://localhost:8080?
+web: npx http-server build -p 8080 --fallback /index.html

@@ -225,7 +225,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* TEMPORARY DEBUGGING CHANGE: Render OnboardingFlow directly on the root path */}
+        <Route path="/" element={<OnboardingFlow />} />
         <Route path="/onboarding" element={<OnboardingFlow />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>

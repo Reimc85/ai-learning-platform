@@ -1,1 +1,1 @@
-web: npx serve -s build -l 8080 --single
+web: npx http-server build -p 8080 --proxy http://localhost:8080?

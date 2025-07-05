@@ -10,10 +10,15 @@ COPY package*.json ./
 # Copy the public directory (containing index.html)
 COPY public ./public
 
+# Copy the src directory (containing your React source code)
+COPY src ./src
+
 # Install dependencies
 RUN npm install
 
 # Copy the rest of the frontend source code from the build context (frontend/)
+# This line might become redundant if all necessary files are copied above,
+# but it's safer to keep it for now.
 COPY . .
 
 # Build the React app for production

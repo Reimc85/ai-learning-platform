@@ -4,14 +4,14 @@ FROM node:18-alpine as builder
 WORKDIR /app/frontend
 
 # Copy package.json and package-lock.json (if you have one)
-# to leverage Docker cache
-COPY frontend/package*.json ./
+# The Dockerfile is in 'frontend/', so paths are relative to 'frontend/'
+COPY package*.json ./  # Changed from frontend/package*.json
 
 # Install dependencies
 RUN npm install
 
 # Copy the rest of the frontend source code
-COPY frontend/ .
+COPY . .  # Changed from frontend/ .
 
 # Build the React app for production
 RUN npm run build
@@ -25,8 +25,8 @@ WORKDIR /app/frontend
 COPY --from=builder /app/frontend/build ./build
 
 # Copy your server.js and package.json for the runtime
-COPY frontend/server.js .
-COPY frontend/package.json .
+COPY server.js . # Changed from frontend/server.js
+COPY package.json . # Changed from frontend/package.json
 
 # Install only production dependencies for the server (e.g., express)
 RUN npm install --production

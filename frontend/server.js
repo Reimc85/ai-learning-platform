@@ -4,8 +4,10 @@ const fs = require('fs');
 const app = express();
 const port = process.env.PORT || 8080;
 
-// __dirname will now correctly point to /app/frontend
-const buildPath = path.join(__dirname, 'build');
+// Explicitly define the absolute path to the build directory
+// This assumes the repository is cloned into /app
+// and the frontend build output is in /app/frontend/build
+const buildPath = path.join('/app', 'frontend', 'build');
 const indexPath = path.join(buildPath, 'index.html');
 
 console.log(`Serving static files from: ${buildPath}`);
@@ -28,21 +30,13 @@ if (!fs.existsSync(indexPath)) {
     console.log(`index.html found at ${indexPath}.`);
 }
 
-// Serve static files from the build directory
-// This middleware will try to find a matching file for the request.
-// If it finds one (e.g., /static/js/main.js), it serves it.
-// If it doesn't find one, it passes the request to the next middleware.
 app.use(express.static(buildPath));
 
-// This catch-all route must come AFTER express.static
-// It will handle any request that wasn't handled by express.static
-// and serve the index.html for SPA routing.
 app.get('*', (req, res) => {
   console.log(`Request for: ${req.url}, serving fallback index.html`);
   res.sendFile(indexPath, (err) => {
     if (err) {
       console.error(`Error sending index.html for ${req.url}:`, err);
-      // If index.html itself cannot be sent, respond with a server error
       res.status(500).send('Internal Server Error during fallback');
     }
   });

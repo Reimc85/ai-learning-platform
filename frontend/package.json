@@ -10,8 +10,7 @@
   },
   "scripts": {
     "build": "react-scripts build",
-    "start": "node server.js",
-    
+    "start": "node server.js"
   },
   "devDependencies": {
     "react-scripts": "5.0.1"

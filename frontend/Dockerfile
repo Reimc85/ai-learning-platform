@@ -31,8 +31,9 @@ WORKDIR /app/frontend
 COPY --from=builder /app/frontend/build ./build
 
 # Copy your server.js and package.json for the runtime
-COPY frontend/server.js .
-COPY frontend/package.json .
+# These paths are relative to the build context (repository root)
+COPY frontend/server.js ./
+COPY frontend/package.json ./
 
 # Install only production dependencies for the server (e.g., express)
 RUN npm install --production

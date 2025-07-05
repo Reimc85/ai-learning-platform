@@ -16,7 +16,7 @@ RUN npm install
 
 # Copy the rest of the frontend source code
 # from the build context (repository root) into the current WORKDIR (/app/frontend)
-COPY frontend/. .
+COPY . . # CHANGED: This copies everything from the current build context (frontend/) to the current WORKDIR (/app/frontend)
 
 # Build the React app for production
 RUN npm run build

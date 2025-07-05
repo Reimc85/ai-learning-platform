@@ -2,11 +2,13 @@
 FROM node:18-alpine as builder
 
 # Set the working directory inside the builder image
-# This is relative to the build context (which is 'frontend/')
 WORKDIR /app
 
 # Copy package.json and package-lock.json from the build context (frontend/)
 COPY package*.json ./
+
+# Copy the public directory (containing index.html)
+COPY public ./public
 
 # Install dependencies
 RUN npm install
@@ -27,7 +29,6 @@ WORKDIR /app
 COPY --from=builder /app/build ./build
 
 # Copy your server.js and package.json for the runtime
-# These are copied from the build context (frontend/)
 COPY server.js .
 COPY package.json .
 

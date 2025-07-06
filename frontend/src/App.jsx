@@ -201,15 +201,21 @@ function Dashboard() {
 function Home() {
   const navigate = useNavigate();
 
+  console.log("Home component rendered!"); // ADD THIS LINE
+
   return (
     <div className="App">
       <header className="App-header">
         <h1>AI Learning Platform</h1>
         <p>Personalized learning powered by AI</p>
       </header>
-      
+
+      {/* CORRECTED INDENTATION FOR THE DIV CONTAINING BUTTONS */}
       <div>
-        <button onClick={() => navigate('/onboarding')}>
+        <button onClick={() => {
+          console.log("Start Learning Now button clicked!"); // ADD THIS LINE
+          navigate('/onboarding');
+        }}>
           Start Learning Now
         </button>
         <button onClick={() => navigate('/onboarding')}>
@@ -219,6 +225,8 @@ function Home() {
     </div>
   );
 }
+
+
 
 // Main App Component with Router
 function App() {

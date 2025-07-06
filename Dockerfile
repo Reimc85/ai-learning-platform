@@ -2,24 +2,16 @@
 FROM node:18-alpine as builder
 
 # Set the working directory inside the builder image
-WORKDIR /app
+WORKDIR /app/frontend # Set WORKDIR to where the frontend code will reside
 
-# Copy package.json and package-lock.json from the build context (frontend/)
-COPY package*.json ./
+# Copy package.json and package-lock.json from the frontend directory in the build context
+COPY frontend/package*.json ./
 
-# Copy the public directory (containing index.html)
-COPY public ./public
-
-# Copy the src directory (containing your React source code)
-COPY src ./src
-
-# Install dependencies
+# Install ALL dependencies (dev and prod) for building
 RUN npm install
 
-# Copy the rest of the frontend source code from the build context (frontend/)
-# This line might become redundant if all necessary files are copied above,
-# but it's safer to keep it for now.
-COPY . .
+# Copy the rest of the frontend source code from the frontend directory in the build context
+COPY frontend/. .
 
 # Build the React app for production
 RUN npm run build
@@ -28,14 +20,14 @@ RUN npm run build
 FROM node:18-alpine
 
 # Set the working directory inside the final image
-WORKDIR /app
+WORKDIR /app/frontend # Set WORKDIR to where the frontend code will reside
 
 # Copy the built React app from the builder stage
-COPY --from=builder /app/build ./build
+COPY --from=builder /app/frontend/build ./build
 
 # Copy your server.js and package.json for the runtime
-COPY server.js .
-COPY package.json .
+COPY frontend/server.js ./
+COPY frontend/package.json ./
 
 # Install only production dependencies for the server (e.g., express)
 RUN npm install --production

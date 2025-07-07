@@ -2,28 +2,33 @@
 FROM node:18-alpine as builder
 
 # Set the working directory inside the builder image
-WORKDIR /app # This WORKDIR is now the root of the frontend app
+# This will be the root of your frontend application within the Docker image
+WORKDIR /app/frontend
 
-# Copy package.json and package-lock.json from the current directory (which is frontend/)
+# Copy package.json and package-lock.json
+# These are now relative to /app/frontend
 COPY package*.json ./
 
 # Install ALL dependencies (dev and prod) for building
 RUN npm install
 
-# Copy the rest of the frontend source code from the current directory (frontend/)
+# Copy the rest of the frontend source code
+# This copies everything from your frontend/ directory into /app/frontend
 COPY . .
 
 # Build the React app for production
+# This will create the 'build' folder inside /app/frontend
 RUN npm run build
 
 # Stage 2: Serve the application with a lightweight Node.js server
 FROM node:18-alpine
 
 # Set the working directory inside the final image
-WORKDIR /app # This WORKDIR is now the root of the frontend app
+WORKDIR /app/frontend
 
 # Copy the built React app from the builder stage
-COPY --from=builder /app/build ./build
+# It's now at /app/frontend/build from the builder stage
+COPY --from=builder /app/frontend/build ./build
 
 # Copy your server.js and package.json for the runtime
 COPY server.js ./

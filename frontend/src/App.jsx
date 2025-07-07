@@ -233,13 +233,14 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* TEMPORARY DEBUGGING CHANGE: Render OnboardingFlow directly on the root path */}
-        <Route path="/" element={<OnboardingFlow />} />
+        {/* Render the Home component on the root path */}
+        <Route path="/" element={<Home />} /> {/* CORRECTED THIS LINE */}
         <Route path="/onboarding" element={<OnboardingFlow />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );
 }
+
 
 export default App;

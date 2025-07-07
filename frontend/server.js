@@ -5,8 +5,8 @@ const app = express();
 const port = process.env.PORT || 8080;
 
 // Explicitly define the absolute path to the build directory
-// This assumes the build output is at /app/build in the container
-const buildPath = path.join('/app', 'build'); // CHANGED THIS LINE
+// This assumes the build output is at /app/frontend/build in the container
+const buildPath = path.join('/app', 'frontend', 'build'); // CORRECTED THIS LINE
 const indexPath = path.join(buildPath, 'index.html');
 
 console.log(`Serving static files from: ${buildPath}`);

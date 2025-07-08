@@ -91,29 +91,34 @@ function OnboardingFlow() {
   );
 }
 
-// Dashboard Component (with your test buttons)
+// Dashboard Component (with your test buttons )
 function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState('');
 
+  // Define API_BASE_URL here, outside the functions but within the component scope
+  // This will pick up the environment variable set in Railway or .env.local
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL; // ADD THIS LINE
+
   const handleGenerateContent = async () => {
     setLoading(true);
     setResult('');
-    
+
     try {
       console.log('🚀 Generate Practice Content button clicked!');
-      
-      const response = await fetch('/api/learners/1/generate-content', {
+
+      // Use the API_BASE_URL for the fetch call
+      const response = await fetch(`${API_BASE_URL}/api/learners/1/generate-content`, { // CORRECTED THIS LINE
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json' 
+        headers: {
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           concept: 'Content Marketing',
           content_type: 'lesson'
         })
       });
-      
+
       if (response.ok) {
         const content = await response.json();
         setResult(`✅ Generated: ${content.concept || 'Content generated successfully!'}`);
@@ -132,17 +137,18 @@ function Dashboard() {
   const handleStartSession = async () => {
     setLoading(true);
     setResult('');
-    
+
     try {
       console.log('🚀 Start Session button clicked!');
-      
-      const response = await fetch('/api/learners/1/sessions', {
+
+      // Use the API_BASE_URL for the fetch call
+      const response = await fetch(`${API_BASE_URL}/api/learners/1/sessions`, { // CORRECTED THIS LINE
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json' 
+        headers: {
+          'Content-Type': 'application/json'
         }
       });
-      
+
       if (response.ok) {
         const session = await response.json();
         setResult(`✅ Session started: ID ${session.id || 'Session created successfully!'}`);
@@ -164,27 +170,27 @@ function Dashboard() {
         <h1>AI Learning Platform - Dashboard</h1>
         <p>Welcome! Your onboarding is complete. 🚀</p>
       </header>
-      
+
       <div>
-        <button 
-          onClick={handleStartSession} 
+        <button
+          onClick={handleStartSession}
           disabled={loading}
         >
           {loading ? 'Loading...' : 'Start Session'}
         </button>
-        
-        <button 
-          onClick={handleGenerateContent} 
+
+        <button
+          onClick={handleGenerateContent}
           disabled={loading}
         >
           {loading ? 'Loading...' : 'Generate Practice Content'}
         </button>
       </div>
-      
+
       {result && (
-        <div style={{ 
-          marginTop: '20px', 
-          padding: '15px', 
+        <div style={{
+          marginTop: '20px',
+          padding: '15px',
           backgroundColor: result.includes('❌') ? '#f8d7da' : '#d4edda',
           border: `1px solid ${result.includes('❌') ? '#f5c6cb' : '#c3e6cb'}`,
           borderRadius: '4px',
@@ -196,6 +202,7 @@ function Dashboard() {
     </div>
   );
 }
+
 
 // Home Component (Landing Page)
 function Home() {

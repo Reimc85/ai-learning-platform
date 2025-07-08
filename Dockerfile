@@ -25,7 +25,7 @@ COPY . .
 # Set environment variables for Flask
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=production 
-# Or development, based on your needs
+
 
 # Expose the port Gunicorn will listen on
 EXPOSE 5000 # Your app.py defaults to 5000, so let's use that internally

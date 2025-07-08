@@ -44,19 +44,19 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
     
-    # Create all database tables
+        # Create all database tables
     with app.app_context():
         try:
             # !!! DANGER: This will drop all existing tables and data !!!
             # Use with extreme caution in production environments.
             # For initial setup/testing, this ensures a clean schema.
-            print("Attempting to drop all database tables...", file=sys.stderr)
-            db.drop_all()
-            print("All database tables dropped (if they existed).", file=sys.stderr)
+            # print("Attempting to drop all database tables...", file=sys.stderr)
+            # db.drop_all() # COMMENT OUT OR REMOVE THIS LINE
+            # print("All database tables dropped (if they existed).", file=sys.stderr)
 
-            print("Attempting to create all database tables...", file=sys.stderr)
-            db.create_all()
-            print("All database tables created.", file=sys.stderr)
+            # print("Attempting to create all database tables...", file=sys.stderr)
+            # db.create_all() # COMMENT OUT OR REMOVE THIS LINE
+            # print("All database tables created.", file=sys.stderr)
         except Exception as e:
             print(f"ERROR: Database initialization failed: {e}", file=sys.stderr)
             # Re-raise the exception to make the deployment fail if table creation is critical

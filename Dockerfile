@@ -32,4 +32,3 @@ EXPOSE 5000 # Your app.py defaults to 5000, so let's use that internally
 
 # Command to run the application
 CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000"]
-v

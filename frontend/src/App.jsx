@@ -98,7 +98,8 @@ function Dashboard() {
 
   // Define API_BASE_URL here, outside the functions but within the component scope
   // This will pick up the environment variable set in Railway or .env.local
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL; // ADD THIS LINE
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || ""; // Use empty string for relative path if not set
+
 
   const handleGenerateContent = async () => {
     setLoading(true);

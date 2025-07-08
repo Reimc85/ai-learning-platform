@@ -201,7 +201,6 @@ function Dashboard() {
 function Home() {
   const navigate = useNavigate();
 
-  console.log("Home component rendered!"); // ADD THIS LINE
 
   return (
     <div className="App">
@@ -213,7 +212,6 @@ function Home() {
       {/* CORRECTED INDENTATION FOR THE DIV CONTAINING BUTTONS */}
       <div>
         <button onClick={() => {
-          console.log("Start Learning Now button clicked!"); // ADD THIS LINE
           navigate('/onboarding');
         }}>
           Start Learning Now

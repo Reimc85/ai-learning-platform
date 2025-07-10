@@ -96,9 +96,13 @@ function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState('');
 
-  // Define API_BASE_URL here, outside the functions but within the component scope
-  // This will pick up the environment variable set in Railway or .env.local
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || ""; // Use empty string for relative path if not set
+    // This correctly reads the REACT_APP_API_BASE_URL variable provided by Railway.
+  // It constructs the full, secure URL for production, 
+  // and provides a fallback for local development.
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL
+    ? `https://${process.env.REACT_APP_API_BASE_URL}`
+    : 'http://localhost:5000';
+
 
 
   const handleGenerateContent = async () => {

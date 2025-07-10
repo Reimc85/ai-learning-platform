@@ -1,18 +1,14 @@
-// API Configuration
-const API_CONFIG = {
-  // Determine if we're in development or production
-  isDevelopment: import.meta.env.DEV,
-  
-  // API Base URLs
-  development: 'http://localhost:5001/api',
-  production: '/api', // Same domain as frontend in production
-  
-  // Get the appropriate API URL
-  getApiUrl() {
-    return this.isDevelopment ? this.development : this.production;
-  }
-};
+// frontend/src/config/api.js
 
-export const API_BASE_URL = API_CONFIG.getApiUrl();
-export default API_CONFIG;
+// Get the public domain from Vite's environment variables, which are injected at build time.
+const railwayPublicDomain = import.meta.env.VITE_RAILWAY_PUBLIC_DOMAIN;
+
+// Check if the railwayPublicDomain variable exists.
+// If it does, construct the production URL by PREPENDING "https://".
+// This is the crucial fix.
+// If it doesn't exist (e.g., in local development ), fall back to the local server URL.
+export const API_BASE_URL = railwayPublicDomain
+  ? `https://${railwayPublicDomain}`
+  : 'http://localhost:5000';
+
 

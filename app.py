@@ -1,11 +1,14 @@
 # TRIGGER A NEW DEPLOYMENT
 import os
 import sys
+import json
+from datetime import datetime
+import traceback
 
 # Add the src directory to the Python path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
-from flask import Flask, send_from_directory, jsonify, request # Make sure jsonify and request are imported
+from flask import Flask, send_from_directory, jsonify, request
 from flask_cors import CORS
 from src.models.user import db
 from src.models.learner import Learner, LearningSession
@@ -33,12 +36,20 @@ def create_app():
     # Database configuration (still commented out for now)
     # ... (database config code remains here) ...
     
-    # --- NEW TEST ROUTE ---
-    # This is a simple route to test if POST requests are working at all.
-    @app.route('/api/test-post', methods=['POST'])
-    def test_post_route():
-        return jsonify({'message': 'POST request successful!'}), 200
-    # --- END NEW TEST ROUTE ---
+    # --- MOVED SESSION ROUTE ---
+    # This route is now handled directly in app.py to bypass Blueprint issues.
+    @app.route('/api/learners/<int:learner_id>/sessions', methods=['POST'])
+    def handle_session_creation(learner_id):
+        """Start a new learning session"""
+        # This is a simplified version for testing.
+        # We'll add the database logic back once this works.
+        print(f"SUCCESS: POST request received for learner {learner_id} sessions.", file=sys.stderr)
+        return jsonify({
+            'message': f'Session started for learner {learner_id}',
+            'id': 123, # Dummy ID for now
+            'learner_id': learner_id
+        }), 201
+    # --- END MOVED SESSION ROUTE ---
 
     # Serve React frontend
     @app.route('/', defaults={'path': ''})

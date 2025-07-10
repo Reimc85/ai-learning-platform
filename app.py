@@ -27,7 +27,7 @@ def create_app():
     # Enable CORS for all routes
     CORS(app, origins="*")
     
-    # Register blueprints
+    # --- REGISTER API BLUEPRINTS FIRST ---
     app.register_blueprint(user_bp, url_prefix='/api')
     app.register_blueprint(learner_bp, url_prefix='/api')
     app.register_blueprint(content_bp, url_prefix='/api')
@@ -37,27 +37,21 @@ def create_app():
     # ... (database config code remains here) ...
     
     # --- MOVED SESSION ROUTE ---
-    # This route is now handled directly in app.py to bypass Blueprint issues.
     @app.route('/api/learners/<int:learner_id>/sessions', methods=['POST'])
     def handle_session_creation(learner_id):
-        """Start a new learning session"""
-        # This is a simplified version for testing.
-        # We'll add the database logic back once this works.
         print(f"SUCCESS: POST request received for learner {learner_id} sessions.", file=sys.stderr)
         return jsonify({
             'message': f'Session started for learner {learner_id}',
-            'id': 123, # Dummy ID for now
+            'id': 123,
             'learner_id': learner_id
         }), 201
     # --- END MOVED SESSION ROUTE ---
 
-    # Serve React frontend
+    # --- SERVE REACT FRONTEND (LAST) ---
+    # This route should only be matched if no other route is found.
     @app.route('/', defaults={'path': ''})
     @app.route('/<path:path>')
     def serve(path):
-        if path.startswith('api/'):
-            return "API endpoint not found", 404
-            
         static_folder_path = app.static_folder
         if static_folder_path is None:
             return "Static folder not configured", 404

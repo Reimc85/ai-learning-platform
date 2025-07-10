@@ -24,8 +24,10 @@ ENV PYTHONUNBUFFERED 1
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# --- THIS IS THE FIX ---
 # Copy the built frontend from the previous stage
-COPY --from=frontend-builder /app/frontend/dist /app/frontend/dist
+# The output folder is named "build", not "dist"
+COPY --from=frontend-builder /app/frontend/build /app/frontend/build
 
 # Copy the rest of your backend application code
 COPY . .
@@ -33,5 +35,5 @@ COPY . .
 # Expose the port the app will listen on
 EXPOSE 5000
 
-# Command to run the application using Gunicorn (the single source of truth)
+# Command to run the application using Gunicorn
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]

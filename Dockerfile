@@ -1,20 +1,9 @@
 # Stage 1: Build the React frontend
 FROM node:18-alpine as frontend-builder
 WORKDIR /app/frontend
-
-# ADD THIS LINE: Define a build argument that can be used to invalidate the cache
-ARG CACHE_BUSTER=1
-
 COPY frontend/package*.json ./
 RUN npm install
 COPY frontend/. .
-
-# ADD THIS LINE: Pass the REACT_APP_API_BASE_URL as a build-time argument
-ARG REACT_APP_API_BASE_URL
-# ADD THIS LINE: Make the build argument available as an environment variable for the build process
-ENV REACT_APP_API_BASE_URL=$REACT_APP_API_BASE_URL
-
-# The build command will now use the up-to-date environment variable
 RUN npm run build
 
 # Stage 2: Build the Python backend and serve the frontend
@@ -35,8 +24,10 @@ COPY . .
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
 
-# Expose the port Gunicorn will listen on
+# Expose the port the app will listen on
 EXPOSE 5000
 
-# Command to run the application
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000"]
+# --- DIAGNOSTIC CHANGE: RUN FLASK DIRECTLY ---
+# Command to run the application using Flask's built-in server
+# This is for debugging the 405 error.
+CMD ["python", "app.py"]

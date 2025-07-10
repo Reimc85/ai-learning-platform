@@ -131,45 +131,29 @@ def get_knowledge_gaps(learner_id):
         'threshold': threshold
     })
 
-# --- CONSOLIDATED SESSION ROUTE ---
-@learner_bp.route('/learners/<int:learner_id>/sessions', methods=['GET', 'POST'])
-def handle_learning_sessions(learner_id):
-    """Handle GET and POST requests for learning sessions."""
-    
-    if request.method == 'POST':
-        # This is the logic from your original start_learning_session function
-        try:
-            learner = Learner.query.get_or_404(learner_id)
-            
-            session = LearningSession(
-                learner_id=learner_id,
-                session_start=datetime.utcnow(),
-                content_accessed=json.dumps([]),
-                exercises_completed=json.dumps([]),
-                performance_scores=json.dumps({})
-            )
-            
-            db.session.add(session)
-            db.session.commit()
-            
-            return jsonify(session.to_dict()), 201
-            
-        except Exception as e:
-            db.session.rollback()
-            print(f"ERROR in start_learning_session (POST): {e}", file=sys.stderr)
-            traceback.print_exc(file=sys.stderr)
-            return jsonify({'error': 'Internal Server Error: ' + str(e)}), 500
+# --- SESSION ROUTES (Reverted to separate GET and POST handlers) ---
 
-    elif request.method == 'GET':
-        # This is the logic from your original get_learning_sessions function
-        learner = Learner.query.get_or_404(learner_id)
-        sessions = LearningSession.query.filter_by(learner_id=learner_id).order_by(
-            LearningSession.session_start.desc()
-        ).all()
-        
-        return jsonify([session.to_dict() for session in sessions])
+@learner_bp.route('/learners/<int:learner_id>/sessions', methods=['POST'])
+def start_learning_session(learner_id):
+    """Start a new learning session"""
+    # This is a simplified version for testing.
+    print(f"SUCCESS: POST request received for learner {learner_id} sessions.", file=sys.stderr)
+    return jsonify({
+        'message': f'Session started for learner {learner_id}',
+        'id': 123, # Dummy ID for now
+        'learner_id': learner_id
+    }), 201
 
-# ... (rest of the file) ...
+@learner_bp.route('/learners/<int:learner_id>/sessions', methods=['GET'])
+def get_learning_sessions(learner_id):
+    """Get all learning sessions for a learner"""
+    # Simplified for testing
+    learner = Learner.query.get_or_404(learner_id)
+    sessions = LearningSession.query.filter_by(learner_id=learner_id).order_by(
+        LearningSession.session_start.desc()
+    ).all()
+    return jsonify([session.to_dict() for session in sessions])
+
 
 @learner_bp.route('/learners/<int:learner_id>/sessions/<int:session_id>', methods=['PUT'])
 def update_learning_session(learner_id, session_id):

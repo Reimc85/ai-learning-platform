@@ -1,14 +1,11 @@
 # TRIGGER A NEW DEPLOYMENT
 import os
 import sys
-import json
-from datetime import datetime
-import traceback
 
 # Add the src directory to the Python path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
-from flask import Flask, send_from_directory, jsonify, request
+from flask import Flask, send_from_directory
 from flask_cors import CORS
 from src.models.user import db
 from src.models.learner import Learner, LearningSession
@@ -24,10 +21,13 @@ def create_app():
     # Configuration
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
     
+    # --- KEY CHANGE: Make trailing slashes optional ---
+    app.url_map.strict_slashes = False
+    
     # Enable CORS for all routes
     CORS(app, origins="*")
     
-    # --- REGISTER API BLUEPRINTS FIRST ---
+    # Register blueprints
     app.register_blueprint(user_bp, url_prefix='/api')
     app.register_blueprint(learner_bp, url_prefix='/api')
     app.register_blueprint(content_bp, url_prefix='/api')
@@ -35,20 +35,8 @@ def create_app():
     
     # Database configuration (still commented out for now)
     # ... (database config code remains here) ...
-    
-    # --- MOVED SESSION ROUTE ---
-    @app.route('/api/learners/<int:learner_id>/sessions', methods=['POST'])
-    def handle_session_creation(learner_id):
-        print(f"SUCCESS: POST request received for learner {learner_id} sessions.", file=sys.stderr)
-        return jsonify({
-            'message': f'Session started for learner {learner_id}',
-            'id': 123,
-            'learner_id': learner_id
-        }), 201
-    # --- END MOVED SESSION ROUTE ---
 
-    # --- SERVE REACT FRONTEND (LAST) ---
-    # This route should only be matched if no other route is found.
+    # Serve React frontend
     @app.route('/', defaults={'path': ''})
     @app.route('/<path:path>')
     def serve(path):
@@ -74,3 +62,4 @@ if __name__ == '__main__':
     import os
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=False)
+

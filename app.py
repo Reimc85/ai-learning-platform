@@ -16,12 +16,14 @@ from src.routes.content import content_bp
 from src.routes.analytics import analytics_bp
 
 def create_app():
-    app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'frontend', 'dist'), static_url_path='')
+    # --- THIS IS THE FIX ---
+    # The static_folder path must match the Dockerfile's output path, which is 'frontend/build'.
+    app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'frontend', 'build'), static_url_path='')
 
     # Configuration
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
     
-    # --- KEY CHANGE: Make trailing slashes optional ---
+    # Make trailing slashes optional
     app.url_map.strict_slashes = False
     
     # Enable CORS for all routes
@@ -51,6 +53,7 @@ def create_app():
             if os.path.exists(index_path):
                 return send_from_directory(static_folder_path, 'index.html')
             else:
+                # This is the error message you are seeing.
                 return "Frontend not built. Please run 'npm run build' in the frontend directory.", 404
 
     return app
@@ -62,4 +65,5 @@ if __name__ == '__main__':
     import os
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=False)
+
 

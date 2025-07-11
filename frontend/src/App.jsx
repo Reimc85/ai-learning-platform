@@ -3,7 +3,7 @@ import { HashRouter as Router, Routes, Route, useNavigate } from 'react-router-d
 import './App.css';
 
 // Onboarding Components 
-function OnboardingFlow() {
+function OnboardingFlow( ) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     username: '',
@@ -96,14 +96,9 @@ function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState('');
 
-    // This correctly reads the REACT_APP_API_BASE_URL variable provided by Railway.
-  // It constructs the full, secure URL for production, 
-  // and provides a fallback for local development.
   // This will be replaced by the actual URL during the build process on Railway.
-// For local development, it will be an empty string, making API calls relative.
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || ""; 
-
-
+  // For local development, it will be an empty string, making API calls relative.
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "";
 
   const handleGenerateContent = async () => {
     setLoading(true);
@@ -112,8 +107,8 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "";
     try {
       console.log('🚀 Generate Practice Content button clicked!');
 
-      // Use the API_BASE_URL for the fetch call
-      const response = await fetch(`${API_BASE_URL}/api/learners/1/generate-content`, { // CORRECTED THIS LINE
+      // The 'https://' is now added here directly.
+      const response = await fetch(`https://${API_BASE_URL}/api/learners/1/generate-content`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -121,7 +116,7 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "";
         body: JSON.stringify({
           concept: 'Content Marketing',
           content_type: 'lesson'
-        })
+        } )
       });
 
       if (response.ok) {
@@ -146,13 +141,13 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "";
     try {
       console.log('🚀 Start Session button clicked!');
 
-      // Use the API_BASE_URL for the fetch call
-      const response = await fetch(`${API_BASE_URL}/api/learners/1/sessions`, { // CORRECTED THIS LINE
+      // The 'https://' is now added here directly.
+      const response = await fetch(`https://${API_BASE_URL}/api/learners/1/sessions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         }
-      });
+      } );
 
       if (response.ok) {
         const session = await response.json();

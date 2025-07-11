@@ -99,9 +99,9 @@ function Dashboard() {
     // This correctly reads the REACT_APP_API_BASE_URL variable provided by Railway.
   // It constructs the full, secure URL for production, 
   // and provides a fallback for local development.
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL
-    ? `https://${process.env.REACT_APP_API_BASE_URL}`
-    : 'http://localhost:5000';
+  // This will be replaced by the actual URL during the build process on Railway.
+// For local development, it will be an empty string, making API calls relative.
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || ""; 
 
 
 
